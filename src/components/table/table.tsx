@@ -11,13 +11,19 @@ import {
   NameCellImage,
   NameCellStyled,
   NameStyled,
+  Pagination,
+  PaginationButton,
+  PaginationInput,
+  PaginationParameters,
+  PaginationSelect,
   SymbolStyled,
   TableData,
   TableHeader,
   TableRow,
   TableStyled,
 } from "./styles";
-import { Currency } from "../../currency-card/types";
+import { Currency } from "../currency-card/types";
+import { calculateHistoricalPrice } from "../../utils/utils";
 
 export const TableComponent: React.FC<{ data: Currency[] }> = ({ data }) => {
   const [sorting, setSorting] = React.useState<SortingState>([]);
@@ -70,12 +76,49 @@ export const TableComponent: React.FC<{ data: Currency[] }> = ({ data }) => {
         accessorKey: "category",
       },
       {
-        header: "From ATH",
-        accessorKey: "fromATH",
+        header: "Historical change / 24h",
+        accessorKey: "historicalChange24h",
+        cell: (info: any) =>
+          calculateHistoricalPrice(
+            info.row.original.values.USD.percentChange24h,
+            info.row.original.values.USD.price
+          ),
       },
       {
-        header: "To ATH",
-        accessorKey: "toATH",
+        header: "Historical change / week",
+        accessorKey: "historicalChange7d",
+        cell: (info: any) =>
+          calculateHistoricalPrice(
+            info.row.original.values.USD.percentChange7d,
+            info.row.original.values.USD.price
+          ),
+      },
+      {
+        header: "Historical change / month",
+        accessorKey: "historicalChange30d",
+        cell: (info: any) =>
+          calculateHistoricalPrice(
+            info.row.original.values.USD.percentChange30d,
+            info.row.original.values.USD.price
+          ),
+      },
+      {
+        header: "Historical change / 3 month",
+        accessorKey: "historicalChange3m",
+        cell: (info: any) =>
+          calculateHistoricalPrice(
+            info.row.original.values.USD.percentChange3m,
+            info.row.original.values.USD.price
+          ),
+      },
+      {
+        header: "Historical change / 6 month",
+        accessorKey: "historicalChange6m",
+        cell: (info: any) =>
+          calculateHistoricalPrice(
+            info.row.original.values.USD.percentChange6m,
+            info.row.original.values.USD.price
+          ),
       },
     ],
     []
@@ -135,57 +178,52 @@ export const TableComponent: React.FC<{ data: Currency[] }> = ({ data }) => {
           ))}
         </tbody>
       </TableStyled>
-      <div className="flex items-center gap-2">
-        <button
-          className="border rounded p-1"
+      <Pagination>
+        <PaginationButton
           onClick={() => tableInstance.setPageIndex(0)}
           disabled={!tableInstance.getCanPreviousPage()}
         >
           {"<<"}
-        </button>
-        <button
-          className="border rounded p-1"
+        </PaginationButton>
+        <PaginationButton
           onClick={() => tableInstance.previousPage()}
           disabled={!tableInstance.getCanPreviousPage()}
         >
           {"<"}
-        </button>
-        <button
-          className="border rounded p-1"
+        </PaginationButton>
+        <PaginationButton
           onClick={() => tableInstance.nextPage()}
           disabled={!tableInstance.getCanNextPage()}
         >
           {">"}
-        </button>
-        <button
-          className="border rounded p-1"
+        </PaginationButton>
+        <PaginationButton
           onClick={() =>
             tableInstance.setPageIndex(tableInstance.getPageCount() - 1)
           }
           disabled={!tableInstance.getCanNextPage()}
         >
           {">>"}
-        </button>
-        <span className="flex items-center gap-1">
+        </PaginationButton>
+        <PaginationParameters>
           <div>Page</div>
           <strong>
             {tableInstance.getState().pagination.pageIndex + 1} of{" "}
             {tableInstance.getPageCount()}
           </strong>
-        </span>
-        <span className="flex items-center gap-1">
-          | Go to page:
-          <input
+        </PaginationParameters>
+        <PaginationParameters>
+          Go to page:
+          <PaginationInput
             type="number"
             defaultValue={tableInstance.getState().pagination.pageIndex + 1}
             onChange={(e) => {
               const page = e.target.value ? Number(e.target.value) - 1 : 0;
               tableInstance.setPageIndex(page);
             }}
-            className="border p-1 rounded w-16"
           />
-        </span>
-        <select
+        </PaginationParameters>
+        <PaginationSelect
           value={tableInstance.getState().pagination.pageSize}
           onChange={(e) => {
             tableInstance.setPageSize(Number(e.target.value));
@@ -196,8 +234,8 @@ export const TableComponent: React.FC<{ data: Currency[] }> = ({ data }) => {
               Show {pageSize}
             </option>
           ))}
-        </select>
-      </div>
+        </PaginationSelect>
+      </Pagination>
     </>
   );
 };

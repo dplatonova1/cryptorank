@@ -1,6 +1,7 @@
 import React from "react";
-import { TableComponent } from "./table/table";
+import { TableComponent } from "../table/table";
 import { Currency } from "../currency-card/types";
+import { WatchlistContainer } from "./styles";
 
 type WatchlistProps = {
   data: Currency[];
@@ -8,5 +9,9 @@ type WatchlistProps = {
 
 export const Watchlist = (props: WatchlistProps) => {
   const { data } = props;
-  return <TableComponent data={data} />;
+  return (
+    <WatchlistContainer>
+      <TableComponent data={data} />
+    </WatchlistContainer>
+  );
 };
