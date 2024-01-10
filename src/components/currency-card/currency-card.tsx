@@ -1,118 +1,63 @@
 import React, { useState } from "react";
-import styled from "styled-components";
 import { CurrencyCardProps } from "./types";
-
-const CurrencyCardContainer = styled.div`
-  display: flex;
-  flex-direction: column;
-  align-items: center;
-  justify-content: center;
-  width: 30vw;
-  padding: 1.5rem;
-  box-shadow: 2px 2px 6px rgba(0, 0, 0, 0.1);
-  background-color: #fff;
-  border-radius: 0.8rem;
-`;
-
-const CurrencyValue = styled.p`
-  font-size: 1.7rem;
-  font-weight: bold;
-  margin: 0;
-  padding: 0;
-`;
-
-const CurrencyValueInput = styled.input`
-  font-size: 1.7rem;
-  font-weight: bold;
-  margin: 0;
-  outline: none;
-  border: none;
-  width: 50%;
-  padding: 0;
-`;
-
-const ExchangePrice = styled.p`
-  font-size: 1.5rem;
-  color: #b2bec3;
-  padding: 0;
-  margin: 0;
-`;
-
-const CurrencyName = styled.select`
-  width: 100%;
-  padding: 1rem;
-  border: 2px solid #b2bec3;
-  border-radius: 0.8rem;
-  font-size: 1.2rem;
-`;
-
-const CurrencyOption = styled.option`
-  width: 100%;
-  padding: 0.5rem;
-  height: min-content;
-  border: none;
-  outline: none;
-  font-size: 1.2rem;
-`;
-const CurrencyImage = styled.img`
-  width: 16px;
-  height: 16px;
-`;
-const CurrencyWrapper = styled.div`
-  display: flex;
-  justify-content: space-between;
-  align-items: center;
-  width: 100%;
-  margin-bottom: 1rem;
-`;
+import {
+  CurrencyCardContainer,
+  CurrencyValue,
+  CurrencyValueInput,
+  CurrencyWrapper,
+  ExchangePrice,
+} from "./styles";
+import Select from "../select/select";
 
 const CurrencyCard = (props: CurrencyCardProps) => {
   const {
-    baseCurrencyValue,
-    baseCurrencyName,
-    quoteCurrencyValue,
-    quoteCurrencyName,
+    baseCurrency,
+    quoteCurrency,
     handleCurrencyChange,
     currencies,
     isBase,
-    setBaseCurrencyValue,
+    baseCurrencyValue,
+    quoteCurrencyValue,
+    baseCurrencyQuantity,
+    setBaseCurrencyQuantity,
   } = props;
+
+  const [value, setValue] = useState(isBase ? baseCurrency : quoteCurrency);
+
+  const exchangeRate = (baseCurrencyValue / quoteCurrencyValue).toFixed(3);
+  const exchangeRateQuote = (quoteCurrencyValue / baseCurrencyValue).toFixed(3);
+
+  const quoteCurrencyBasedOnQuantity =
+    baseCurrencyQuantity * Number(exchangeRate);
+
   return (
     <CurrencyCardContainer>
       <CurrencyWrapper>
         {isBase ? (
           <CurrencyValueInput
-            value={baseCurrencyValue}
-            onChange={setBaseCurrencyValue}
+            value={baseCurrencyQuantity}
+            onChange={setBaseCurrencyQuantity}
           />
         ) : (
-          <CurrencyValue>{quoteCurrencyValue}</CurrencyValue>
+          <CurrencyValue>{quoteCurrencyBasedOnQuantity}</CurrencyValue>
         )}
 
         {isBase ? (
           <ExchangePrice>
-            1 {baseCurrencyName} = {quoteCurrencyValue} {quoteCurrencyName}
+            1 {baseCurrency.symbol} = {exchangeRate} {quoteCurrency.symbol}
           </ExchangePrice>
         ) : (
           <ExchangePrice>
-            1 {quoteCurrencyName} = {(1 / quoteCurrencyValue).toPrecision(5)}{" "}
-            {baseCurrencyName}
+            1 {quoteCurrency.symbol} = {exchangeRateQuote} {baseCurrency.symbol}
           </ExchangePrice>
         )}
       </CurrencyWrapper>
-      <CurrencyName
-        value={isBase ? baseCurrencyName : quoteCurrencyName}
-        onChange={handleCurrencyChange}
-      >
-        {currencies.map(({ symbol, name, images }) => {
-          return (
-            <CurrencyOption value={symbol}>
-              <CurrencyImage src={images["60x60"]} alt="currency symbol" />
-              {name} {symbol}
-            </CurrencyOption>
-          );
-        })}
-      </CurrencyName>
+      <Select
+        value={value}
+        setValue={setValue}
+        options={currencies}
+        onSelect={handleCurrencyChange}
+      ></Select>
     </CurrencyCardContainer>
   );
 };

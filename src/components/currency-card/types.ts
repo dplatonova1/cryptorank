@@ -22,10 +22,10 @@ export type Currency = {
   volume24hBase: number;
   values: {
     USD: CurrencyValue;
-    BTC: CurrencyValue;
-    ETH: CurrencyValue;
+    BTC?: CurrencyValue;
+    ETH?: CurrencyValue;
   };
-  tokens: [
+  tokens?: [
     {
       tokenAddress: string;
       platform: {
@@ -35,7 +35,7 @@ export type Currency = {
       };
     }
   ];
-  links: [
+  links?: [
     {
       type: string;
       value: string;
@@ -43,8 +43,8 @@ export type Currency = {
   ];
   circulatingSupply: number;
   totalSupply: number;
-  maxSupply: number;
-  lastUpdated: Date;
+  maxSupply?: number;
+  lastUpdated: string;
   images: {
     "16x16": string;
     "200x200": string;
@@ -53,12 +53,13 @@ export type Currency = {
 };
 
 export type CurrencyCardProps = {
-  baseCurrencyName: string;
+  baseCurrencyQuantity: number;
+  baseCurrency: Currency;
   baseCurrencyValue: number;
   quoteCurrencyValue: number;
-  quoteCurrencyName: string;
-  handleCurrencyChange: (event: React.ChangeEvent<HTMLSelectElement>) => void;
+  quoteCurrency: Currency;
+  handleCurrencyChange: (option: Currency) => void;
   currencies: Currency[];
   isBase: boolean;
-  setBaseCurrencyValue: (event: React.ChangeEvent<HTMLInputElement>) => void;
+  setBaseCurrencyQuantity: (event: React.ChangeEvent<HTMLInputElement>) => void;
 };

@@ -1,21 +1,15 @@
 import React from "react";
-import styled from "styled-components";
+import { Page } from "../components/page/page";
+import { Watchlist } from "../components/watchlist/watchlist";
+import { useCurrencies } from "../services/service";
 
-const PageContainer = styled.div`
-  display: flex;
-  flex-direction: column;
-  justify-content: center;
-  align-items: center;
-  height: 100vh;
-  background-color: #f5f5f5;
-`;
-
-const Watchlist: React.FC = () => {
+export const CurrencyRates = () => {
+  const { data: currencies, isLoading, isError } = useCurrencies();
+  if (isError) return <div>Error fetching data</div>;
+  if (isLoading) return <div>Loading...</div>;
   return (
-    <PageContainer>
-      <h1>Watchlist</h1>
-    </PageContainer>
+    <Page title={"Watchlist"}>
+      <Watchlist data={currencies.data} />
+    </Page>
   );
 };
-
-export default Watchlist;
