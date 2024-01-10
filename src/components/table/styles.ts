@@ -43,7 +43,7 @@ export const NameCellImage = styled.img`
   height: 1rem;
 `;
 
-export const Pagination = styled.div`
+export const PaginationContainer = styled.div`
   margin-top: 1rem;
   display: flex;
   align-items: center;

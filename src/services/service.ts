@@ -14,7 +14,15 @@ export const useExchangeRates = (base: string) => {
   return { exchangeRates: data, isLoading: !error && !data, isError: error };
 };
 
-export const useCurrencies = () => {
+export const useCurrencies = (limit: number, offset: number) => {
+  const { data, error } = useSWR(
+    `https://api.cryptorank.io/v1/currencies?api_key=66d8d5affdd56709805acf96964ef98b54d9ea1d77b7112ca9e8ce492e0b&optionalFields=images&limit=${limit}&offset=${offset}`,
+    fetcher
+  );
+  return { data, isLoading: !error && !data, isError: error };
+};
+
+export const useCurrencyList = () => {
   const { data, error } = useSWR(
     `https://api.cryptorank.io/v1/currencies?api_key=66d8d5affdd56709805acf96964ef98b54d9ea1d77b7112ca9e8ce492e0b&optionalFields=images`,
     fetcher

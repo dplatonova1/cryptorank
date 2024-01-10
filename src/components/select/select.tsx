@@ -19,6 +19,7 @@ interface SelectProps {
 
 export const Select = (props: SelectProps) => {
   const { options, onSelect, value, setValue } = props;
+
   const [isOpen, setIsOpen] = useState(false);
 
   const toggleOpen = () => {
@@ -46,7 +47,7 @@ export const Select = (props: SelectProps) => {
         <Options>
           {options.map((option, index) => (
             <CurrencyOption key={index} onClick={() => handleSelect(option)}>
-              <CurrencyImage src={option.images["16x16"]} alt={option.name} />
+              <CurrencyImage src={option.images["16x16"]} alt={option.symbol} />
               {option.name}
             </CurrencyOption>
           ))}

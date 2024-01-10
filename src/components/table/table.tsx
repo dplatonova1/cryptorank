@@ -11,11 +11,6 @@ import {
   NameCellImage,
   NameCellStyled,
   NameStyled,
-  Pagination,
-  PaginationButton,
-  PaginationInput,
-  PaginationParameters,
-  PaginationSelect,
   SymbolStyled,
   TableData,
   TableHeader,
@@ -24,8 +19,15 @@ import {
 } from "./styles";
 import { Currency } from "../currency-card/types";
 import { calculateHistoricalPrice } from "../../utils/utils";
+import Pagination from "./pagination";
 
-export const TableComponent: React.FC<{ data: Currency[] }> = ({ data }) => {
+export const TableComponent: React.FC<{
+  data: Currency[];
+  loading: boolean;
+  onPaginationChange: any;
+  pageCount: number;
+  pagination: any;
+}> = ({ data, loading, onPaginationChange, pageCount, pagination }) => {
   const [sorting, setSorting] = React.useState<SortingState>([]);
   const columns = React.useMemo(
     () => [
@@ -127,14 +129,14 @@ export const TableComponent: React.FC<{ data: Currency[] }> = ({ data }) => {
   const tableInstance = useReactTable({
     columns,
     data,
-    state: {
-      sorting,
-    },
+    state: { sorting, pagination },
     onSortingChange: setSorting,
     initialState: { pagination: { pageSize: 5 } },
     getCoreRowModel: getCoreRowModel(),
     getPaginationRowModel: getPaginationRowModel(),
     getSortedRowModel: getSortedRowModel(),
+    manualPagination: true,
+    onPaginationChange,
   });
 
   return (
@@ -178,64 +180,7 @@ export const TableComponent: React.FC<{ data: Currency[] }> = ({ data }) => {
           ))}
         </tbody>
       </TableStyled>
-      <Pagination>
-        <PaginationButton
-          onClick={() => tableInstance.setPageIndex(0)}
-          disabled={!tableInstance.getCanPreviousPage()}
-        >
-          {"<<"}
-        </PaginationButton>
-        <PaginationButton
-          onClick={() => tableInstance.previousPage()}
-          disabled={!tableInstance.getCanPreviousPage()}
-        >
-          {"<"}
-        </PaginationButton>
-        <PaginationButton
-          onClick={() => tableInstance.nextPage()}
-          disabled={!tableInstance.getCanNextPage()}
-        >
-          {">"}
-        </PaginationButton>
-        <PaginationButton
-          onClick={() =>
-            tableInstance.setPageIndex(tableInstance.getPageCount() - 1)
-          }
-          disabled={!tableInstance.getCanNextPage()}
-        >
-          {">>"}
-        </PaginationButton>
-        <PaginationParameters>
-          <div>Page</div>
-          <strong>
-            {tableInstance.getState().pagination.pageIndex + 1} of{" "}
-            {tableInstance.getPageCount()}
-          </strong>
-        </PaginationParameters>
-        <PaginationParameters>
-          Go to page:
-          <PaginationInput
-            type="number"
-            defaultValue={tableInstance.getState().pagination.pageIndex + 1}
-            onChange={(e) => {
-              const page = e.target.value ? Number(e.target.value) - 1 : 0;
-              tableInstance.setPageIndex(page);
-            }}
-          />
-        </PaginationParameters>
-        <PaginationSelect
-          value={tableInstance.getState().pagination.pageSize}
-          onChange={(e) => {
-            tableInstance.setPageSize(Number(e.target.value));
-          }}
-        >
-          {[5, 10, 20, 30, 40, 50].map((pageSize) => (
-            <option key={pageSize} value={pageSize}>
-              Show {pageSize}
-            </option>
-          ))}
-        </PaginationSelect>
-      </Pagination>
+      <Pagination table={tableInstance} pageCount={pageCount} />
     </>
   );
 };

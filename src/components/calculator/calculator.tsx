@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from "react";
+import React, { useCallback, useEffect, useState } from "react";
 import { ButtonStyled, CalculatorContainer } from "./styles";
 import { useCurrencies, useCurrency } from "../../services/service";
 import CurrencyCard from "../currency-card/currency-card";
@@ -84,36 +84,28 @@ type CalculatorProps = {
 
 export const Calculator = (props: CalculatorProps) => {
   const { data } = props;
-
-  const [baseCurrency, setbaseCurrency] = useState<Currency>(initialData[0]);
-  const [quoteCurrency, setquoteCurrency] = useState<Currency>(initialData[1]);
+  const [baseCurrency, setBaseCurrency] = useState<Currency>(initialData[0]);
+  const [quoteCurrency, setQuoteCurrency] = useState<Currency>(initialData[1]);
   const [baseCurrencyQuantity, setBaseCurrencyQuantity] = useState(1);
-  const [baseCurrencyValue, setBaseCurrencyValue] = useState(
-    initialData[0].values.USD.price
-  );
-  const [quoteCurrencyValue, setQuoteCurrencyValue] = useState(
-    initialData[1].values.USD.price
-  );
-  const {
-    data: quoteCurrencyData,
-    isLoading: isQuoteCurrencyDataLoading,
-    isError: isQuoteCurrencyDataError,
-  } = useCurrency(quoteCurrency.id);
-  const {
-    data: baseCurrencyData,
-    isLoading: isBaseCurrencyDataLoading,
-    isError: isBaseCurrencyDataError,
-  } = useCurrency(baseCurrency.id);
 
-  const handlequoteCurrencyChange = (option: Currency) => {
-    setquoteCurrency(option);
-    setQuoteCurrencyValue(quoteCurrencyData.data.values.USD.price);
-  };
+  const { data: quoteCurrencyData, isLoading: isQuoteCurrencyDataLoading } =
+    useCurrency(quoteCurrency.id);
+  const { data: baseCurrencyData, isLoading: isBaseCurrencyDataLoading } =
+    useCurrency(baseCurrency.id);
 
-  const handlebaseCurrencyChange = (option: Currency) => {
-    setbaseCurrency(option);
-    setBaseCurrencyValue(baseCurrencyData.data.values.USD.price);
-  };
+  const handleQuoteCurrencyChange = useCallback(
+    (option: Currency) => {
+      setQuoteCurrency(option);
+    },
+    [isQuoteCurrencyDataLoading]
+  );
+
+  const handleBaseCurrencyChange = useCallback(
+    (option: Currency) => {
+      setBaseCurrency(option);
+    },
+    [isBaseCurrencyDataLoading]
+  );
 
   const handleBaseCurrencyQuantity = (
     event: React.ChangeEvent<HTMLInputElement>
@@ -122,8 +114,8 @@ export const Calculator = (props: CalculatorProps) => {
   };
 
   const toggleCurrencies = () => {
-    setquoteCurrency(baseCurrency);
-    setbaseCurrency(quoteCurrency);
+    setQuoteCurrency(baseCurrency);
+    setBaseCurrency(quoteCurrency);
   };
 
   return (
@@ -133,13 +125,11 @@ export const Calculator = (props: CalculatorProps) => {
           <CurrencyCard
             baseCurrencyQuantity={baseCurrencyQuantity}
             isBase={true}
-            baseCurrency={baseCurrency}
-            quoteCurrency={quoteCurrency}
-            baseCurrencyValue={baseCurrencyValue}
-            handleCurrencyChange={handlebaseCurrencyChange}
+            baseCurrency={baseCurrencyData}
+            quoteCurrency={quoteCurrencyData}
+            handleCurrencyChange={handleBaseCurrencyChange}
             currencies={data}
             setBaseCurrencyQuantity={handleBaseCurrencyQuantity}
-            quoteCurrencyValue={quoteCurrencyValue}
           />
           <ButtonStyled onClick={toggleCurrencies}>
             <ExchangeAnimation />
@@ -147,13 +137,11 @@ export const Calculator = (props: CalculatorProps) => {
           <CurrencyCard
             baseCurrencyQuantity={baseCurrencyQuantity}
             isBase={false}
-            baseCurrency={baseCurrency}
-            quoteCurrency={quoteCurrency}
-            baseCurrencyValue={baseCurrencyValue}
-            handleCurrencyChange={handlequoteCurrencyChange}
+            baseCurrency={baseCurrencyData}
+            quoteCurrency={quoteCurrencyData}
+            handleCurrencyChange={handleQuoteCurrencyChange}
             currencies={data}
             setBaseCurrencyQuantity={handleBaseCurrencyQuantity}
-            quoteCurrencyValue={quoteCurrencyValue}
           />
         </>
       )}

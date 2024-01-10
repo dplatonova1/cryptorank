@@ -55,8 +55,6 @@ export type Currency = {
 export type CurrencyCardProps = {
   baseCurrencyQuantity: number;
   baseCurrency: Currency;
-  baseCurrencyValue: number;
-  quoteCurrencyValue: number;
   quoteCurrency: Currency;
   handleCurrencyChange: (option: Currency) => void;
   currencies: Currency[];
