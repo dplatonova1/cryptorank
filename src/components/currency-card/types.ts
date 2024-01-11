@@ -7,5 +7,6 @@ export type CurrencyCardProps = {
   handleCurrencyChange: (option: Currency) => void;
   currencies: Currency[];
   isBase: boolean;
+  isLoading: boolean;
   setBaseCurrencyQuantity: (event: React.ChangeEvent<HTMLInputElement>) => void;
 };

@@ -2,7 +2,7 @@ import React from "react";
 
 import { Page } from "../components/page/page";
 import { Calculator } from "../components/calculator/calculator";
-import { useCurrencyList } from "../services/service";
+import { useCurrencyList } from "../services/api";
 
 export const Converter = () => {
   const { data: currencies, isLoading, isError } = useCurrencyList();

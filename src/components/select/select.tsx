@@ -12,7 +12,7 @@ import type { Currency } from "../../types";
 import { SelectProps } from "./types";
 
 export const Select = (props: SelectProps) => {
-  const { options, onSelect, value, setValue } = props;
+  const { options, onSelect, value } = props;
 
   const [isOpen, setIsOpen] = useState(false);
 
@@ -22,11 +22,10 @@ export const Select = (props: SelectProps) => {
 
   const handleSelect = useCallback(
     (option: Currency) => {
-      setValue(option);
       onSelect(option);
       setIsOpen(false);
     },
-    [setValue, onSelect]
+    [onSelect]
   );
   return (
     <CurrencySelectBox onClick={toggleOpen}>

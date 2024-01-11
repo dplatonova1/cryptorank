@@ -18,9 +18,13 @@ const CurrencyCard = (props: CurrencyCardProps) => {
     isBase,
     baseCurrencyQuantity,
     setBaseCurrencyQuantity,
+    isLoading,
   } = props;
 
-  const [value, setValue] = useState(isBase ? baseCurrency : quoteCurrency);
+  const value = useMemo(() => {
+    return isBase ? baseCurrency : quoteCurrency;
+  }, [baseCurrency, isBase, quoteCurrency]);
+  console.log(value);
 
   const exchangeRate = useMemo(() => {
     return Math.round(
@@ -39,32 +43,38 @@ const CurrencyCard = (props: CurrencyCardProps) => {
 
   return (
     <CurrencyCardContainer>
-      <CurrencyWrapper>
-        {isBase ? (
-          <CurrencyValueInput
-            value={baseCurrencyQuantity}
-            onChange={setBaseCurrencyQuantity}
-          />
-        ) : (
-          <CurrencyValue>{quoteCurrencyBasedOnQuantity}</CurrencyValue>
-        )}
+      {isLoading ? (
+        <ExchangePrice>'Loading...'</ExchangePrice>
+      ) : (
+        <>
+          <CurrencyWrapper>
+            {isBase ? (
+              <CurrencyValueInput
+                value={baseCurrencyQuantity}
+                onChange={setBaseCurrencyQuantity}
+              />
+            ) : (
+              <CurrencyValue>{quoteCurrencyBasedOnQuantity}</CurrencyValue>
+            )}
 
-        {isBase ? (
-          <ExchangePrice>
-            1 {baseCurrency.symbol} = {exchangeRate} {quoteCurrency.symbol}
-          </ExchangePrice>
-        ) : (
-          <ExchangePrice>
-            1 {quoteCurrency.symbol} = {exchangeRateQuote} {baseCurrency.symbol}
-          </ExchangePrice>
-        )}
-      </CurrencyWrapper>
-      <Select
-        value={value}
-        setValue={setValue}
-        options={currencies}
-        onSelect={handleCurrencyChange}
-      ></Select>
+            {isBase ? (
+              <ExchangePrice>
+                1 {baseCurrency.symbol} = {exchangeRate} {quoteCurrency.symbol}
+              </ExchangePrice>
+            ) : (
+              <ExchangePrice>
+                1 {quoteCurrency.symbol} = {exchangeRateQuote}{" "}
+                {baseCurrency.symbol}
+              </ExchangePrice>
+            )}
+          </CurrencyWrapper>
+          <Select
+            value={value}
+            options={currencies}
+            onSelect={handleCurrencyChange}
+          ></Select>
+        </>
+      )}
     </CurrencyCardContainer>
   );
 };

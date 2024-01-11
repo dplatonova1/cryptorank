@@ -1,6 +1,6 @@
 import React, { useState } from "react";
 import { ButtonStyled, CalculatorContainer } from "./styles";
-import { useCurrency } from "../../services/service";
+import { useCurrency } from "../../services/api";
 import CurrencyCard from "../currency-card/currency-card";
 import { ExchangeAnimation } from "../exchange-animation/exchange-animation";
 import type { Currency } from "../../types";
@@ -41,6 +41,7 @@ export const Calculator = (props: CalculatorProps) => {
             handleCurrencyChange={setBaseCurrency}
             currencies={data}
             setBaseCurrencyQuantity={handleBaseCurrencyQuantity}
+            isLoading={isBaseCurrencyDataLoading}
           />
           <ButtonStyled onClick={toggleCurrencies}>
             <ExchangeAnimation />
@@ -53,6 +54,7 @@ export const Calculator = (props: CalculatorProps) => {
             handleCurrencyChange={setQuoteCurrency}
             currencies={data}
             setBaseCurrencyQuantity={handleBaseCurrencyQuantity}
+            isLoading={isQuoteCurrencyDataLoading}
           />
         </>
       )}
