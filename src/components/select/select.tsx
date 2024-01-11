@@ -1,4 +1,4 @@
-import React, { memo, useCallback, useState } from "react";
+import { useCallback, useState } from "react";
 import {
   CurrencyImage,
   CurrencySelectBox,
@@ -8,14 +8,8 @@ import {
   ArrowIconStyled,
   CurrencyNameWrapper,
 } from "./styles";
-import { Currency } from "../currency-card/types";
-
-interface SelectProps {
-  value: Currency;
-  setValue: (option: Currency) => void;
-  options: Currency[];
-  onSelect: (option: Currency) => void;
-}
+import type { Currency } from "../../types";
+import { SelectProps } from "./types";
 
 export const Select = (props: SelectProps) => {
   const { options, onSelect, value, setValue } = props;

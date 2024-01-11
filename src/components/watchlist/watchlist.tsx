@@ -1,4 +1,3 @@
-import React from "react";
 import { TableComponent } from "../table/table";
 import { WatchlistContainer } from "./styles";
 import { useCurrencies } from "../../services/service";

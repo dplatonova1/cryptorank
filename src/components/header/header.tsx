@@ -1,4 +1,3 @@
-import React from "react";
 import { HeaderContainer, HeaderLink } from "./styles";
 
 export const Header = () => {
@@ -9,4 +8,3 @@ export const Header = () => {
     </HeaderContainer>
   );
 };
-

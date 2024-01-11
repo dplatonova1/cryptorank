@@ -1,4 +1,3 @@
-import React from "react";
 import {
   PaginationContainer,
   PaginationButton,
@@ -7,7 +6,8 @@ import {
   PaginationSelect,
 } from "./styles";
 import { Table } from "@tanstack/react-table";
-import { Currency } from "../currency-card/types";
+import type { Currency } from "../../types";
+import { pageSizes } from "../../utils/consts";
 interface PaginationProps {
   table: Table<Currency>;
   pageCount: number;
@@ -64,7 +64,7 @@ export const Pagination = (props: PaginationProps) => {
           table.setPageSize(Number(e.target.value));
         }}
       >
-        {[5, 10, 20, 30, 40, 50].map((pageSize) => (
+        {pageSizes.map((pageSize) => (
           <option key={pageSize} value={pageSize}>
             Show {pageSize}
           </option>

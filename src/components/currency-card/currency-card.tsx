@@ -1,4 +1,4 @@
-import React, { useMemo, useState } from "react";
+import { useMemo, useState } from "react";
 import { CurrencyCardProps } from "./types";
 import {
   CurrencyCardContainer,
@@ -23,18 +23,18 @@ const CurrencyCard = (props: CurrencyCardProps) => {
   const [value, setValue] = useState(isBase ? baseCurrency : quoteCurrency);
 
   const exchangeRate = useMemo(() => {
-    return (
+    return Math.round(
       baseCurrency.values.USD.price / quoteCurrency.values.USD.price
-    ).toFixed(3);
+    );
   }, [baseCurrency.values.USD.price, quoteCurrency.values.USD.price]);
   const exchangeRateQuote = useMemo(() => {
-    return (
+    return Math.round(
       quoteCurrency.values.USD.price / baseCurrency.values.USD.price
-    ).toFixed(3);
+    );
   }, [baseCurrency.values.USD.price, quoteCurrency.values.USD.price]);
 
   const quoteCurrencyBasedOnQuantity = useMemo(() => {
-    return baseCurrencyQuantity * Number(exchangeRate);
+    return baseCurrencyQuantity * exchangeRate;
   }, [baseCurrencyQuantity, exchangeRate]);
 
   return (

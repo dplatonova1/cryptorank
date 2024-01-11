@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React from "react";
 
 import { Page } from "../components/page/page";
 import { Calculator } from "../components/calculator/calculator";

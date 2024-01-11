@@ -63,8 +63,8 @@ export const CurrencyOption = styled.option`
   font-size: 1.2rem;
 `;
 export const CurrencyImage = styled.img`
-  width: 16px;
-  height: 16px;
+  width: 1rem;
+  height: 1rem;
 `;
 export const CurrencyWrapper = styled.div`
   display: flex;

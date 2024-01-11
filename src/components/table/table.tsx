@@ -1,4 +1,4 @@
-import React from "react";
+import React, { useMemo, useState } from "react";
 import {
   useReactTable,
   getCoreRowModel,
@@ -6,6 +6,7 @@ import {
   getSortedRowModel,
   flexRender,
   SortingState,
+  Row,
 } from "@tanstack/react-table";
 import {
   NameCellImage,
@@ -17,32 +18,27 @@ import {
   TableRow,
   TableStyled,
 } from "./styles";
-import { Currency } from "../currency-card/types";
 import { calculateHistoricalPrice } from "../../utils/utils";
 import Pagination from "./pagination";
+import { RowData, TableProps } from "./types";
 
-export const TableComponent: React.FC<{
-  data: Currency[];
-  loading: boolean;
-  onPaginationChange: any;
-  pageCount: number;
-  pagination: any;
-}> = ({ data, loading, onPaginationChange, pageCount, pagination }) => {
-  const [sorting, setSorting] = React.useState<SortingState>([]);
-  const columns = React.useMemo(
+export const TableComponent = (props: TableProps) => {
+  const { data, loading, onPaginationChange, pageCount, pagination } = props;
+  const [sorting, setSorting] = useState<SortingState>([]);
+  const columns = useMemo(
     () => [
       {
         header: "Name",
         accessorKey: "name",
-        cell: (row: any) => {
+        cell: (info: RowData) => {
           return (
             <NameCellStyled>
               <NameCellImage
-                src={row.row.original.images["16x16"]}
+                src={info.row.original.images["16x16"]}
               ></NameCellImage>
               <NameStyled>
-                {row.row.original.name}{" "}
-                <SymbolStyled>{row.row.original.symbol}</SymbolStyled>
+                {info.row.original.name}{" "}
+                <SymbolStyled>{info.row.original.symbol}</SymbolStyled>
               </NameStyled>
             </NameCellStyled>
           );
@@ -51,14 +47,14 @@ export const TableComponent: React.FC<{
       {
         header: "Price USD",
         accessorKey: "values.USD.price",
-        cell: (info: any) => {
+        cell: (info: RowData) => {
           return `$ ${info.getValue().toFixed(2)}`;
         },
       },
       {
         header: "Circulating Supply",
         accessorKey: "circulatingSupply",
-        cell: (info: any) => {
+        cell: (info: RowData) => {
           return `${info.row.original.symbol} ${Intl.NumberFormat("en", {
             notation: "compact",
           }).format(info.getValue())}`;
@@ -67,7 +63,7 @@ export const TableComponent: React.FC<{
       {
         header: "Market Cap",
         accessorKey: "values.USD.marketCap",
-        cell: (info: any) => {
+        cell: (info: RowData) => {
           return `$ ${Intl.NumberFormat("en", { notation: "compact" }).format(
             info.getValue()
           )}`;
@@ -80,7 +76,7 @@ export const TableComponent: React.FC<{
       {
         header: "Historical change / 24h",
         accessorKey: "historicalChange24h",
-        cell: (info: any) =>
+        cell: (info: RowData) =>
           calculateHistoricalPrice(
             info.row.original.values.USD.percentChange24h,
             info.row.original.values.USD.price
@@ -89,7 +85,7 @@ export const TableComponent: React.FC<{
       {
         header: "Historical change / week",
         accessorKey: "historicalChange7d",
-        cell: (info: any) =>
+        cell: (info: RowData) =>
           calculateHistoricalPrice(
             info.row.original.values.USD.percentChange7d,
             info.row.original.values.USD.price
@@ -98,7 +94,7 @@ export const TableComponent: React.FC<{
       {
         header: "Historical change / month",
         accessorKey: "historicalChange30d",
-        cell: (info: any) =>
+        cell: (info: RowData) =>
           calculateHistoricalPrice(
             info.row.original.values.USD.percentChange30d,
             info.row.original.values.USD.price
@@ -107,7 +103,7 @@ export const TableComponent: React.FC<{
       {
         header: "Historical change / 3 month",
         accessorKey: "historicalChange3m",
-        cell: (info: any) =>
+        cell: (info: RowData) =>
           calculateHistoricalPrice(
             info.row.original.values.USD.percentChange3m,
             info.row.original.values.USD.price
@@ -116,7 +112,7 @@ export const TableComponent: React.FC<{
       {
         header: "Historical change / 6 month",
         accessorKey: "historicalChange6m",
-        cell: (info: any) =>
+        cell: (info: RowData) =>
           calculateHistoricalPrice(
             info.row.original.values.USD.percentChange6m,
             info.row.original.values.USD.price
