@@ -16,7 +16,7 @@ export const Watchlist = () => {
     if (!isLoading) {
       setCurrencies(currenciesData);
     }
-  }, []);
+  }, [pagination, currenciesData, isLoading]);
 
   const pageCount = Math.round(currencies.meta.count / limit);
   if (isLoading) return <p>Is loading</p>;
