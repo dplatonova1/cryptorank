@@ -1,11 +1,12 @@
 import React, { useState } from "react";
 import { ButtonStyled, CalculatorContainer } from "./styles";
-import { useCurrency } from "../../services/api";
+import { fetcher, useCurrency } from "../../services/api";
 import CurrencyCard from "../currency-card/currency-card";
 import { ExchangeAnimation } from "../exchange-animation/exchange-animation";
 import type { Currency } from "../../types";
 import { CalculatorProps } from "./types";
-import { initialData } from "../../utils/consts";
+import { API_KEY, initialData } from "../../utils/consts";
+import useSWR from "swr";
 
 export const Calculator = (props: CalculatorProps) => {
   const { data } = props;
@@ -15,6 +16,7 @@ export const Calculator = (props: CalculatorProps) => {
 
   const { data: quoteCurrencyData, isLoading: isQuoteCurrencyDataLoading } =
     useCurrency(quoteCurrency.id);
+
   const { data: baseCurrencyData, isLoading: isBaseCurrencyDataLoading } =
     useCurrency(baseCurrency.id);
 

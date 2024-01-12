@@ -24,7 +24,6 @@ const CurrencyCard = (props: CurrencyCardProps) => {
   const value = useMemo(() => {
     return isBase ? baseCurrency : quoteCurrency;
   }, [baseCurrency, isBase, quoteCurrency]);
-  console.log(value);
 
   const exchangeRate = useMemo(() => {
     return Math.round(
