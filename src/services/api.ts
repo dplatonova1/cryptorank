@@ -1,32 +1,31 @@
 import axios from "axios";
 import useSWR from "swr";
-import { API_KEY } from "../utils/consts";
+import { API_KEY, baseURL } from "../utils/consts";
 
-export const fetcher = async (url: string) => {
-  const response = await axios.get(url);
-  return response.data;
+export const useFetcher = (url: string) => {
+  const { data, error, isLoading } = useSWR(url, (url) =>
+    axios.get(url).then((response) => response.data)
+  );
+
+  return {
+    data,
+    isLoading,
+    isError: error,
+  };
 };
 
 export const useCurrencies = (limit: number, offset: number) => {
-  const { data, error, isLoading } = useSWR(
-    `https://api.cryptorank.io/v1/currencies?api_key=${API_KEY}&optionalFields=images&limit=${limit}&offset=${offset}`,
-    fetcher
+  return useFetcher(
+    `https://api.cryptorank.io/v1/currencies?api_key=${API_KEY}&optionalFields=images&limit=${limit}&offset=${offset}`
   );
-  return { data, isLoading, isError: error };
 };
 
 export const useCurrencyList = () => {
-  const { data, error, isLoading } = useSWR(
-    `https://api.cryptorank.io/v1/currencies?api_key=${API_KEY}&optionalFields=images`,
-    fetcher
+  return useFetcher(
+    `https://api.cryptorank.io/v1/currencies?api_key=${API_KEY}&optionalFields=images`
   );
-  return { data, isLoading, isError: error };
 };
 
 export const useCurrency = (id: number) => {
-  const { data, error, isLoading } = useSWR(
-    `https://api.cryptorank.io/v1/currencies/${id}?api_key=${API_KEY}`,
-    fetcher
-  );
-  return { data, isLoading, isError: error };
+  return useFetcher(`${baseURL}/currencies/${id}?api_key=${API_KEY}`);
 };

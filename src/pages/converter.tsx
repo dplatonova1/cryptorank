@@ -1,5 +1,4 @@
 import React from "react";
-
 import { Page } from "../components/page/page";
 import { Calculator } from "../components/calculator/calculator";
 import { useCurrencyList } from "../services/api";

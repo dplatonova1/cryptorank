@@ -1,12 +1,11 @@
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
 import { ButtonStyled, CalculatorContainer } from "./styles";
-import { fetcher, useCurrency } from "../../services/api";
+import { useCurrency } from "../../services/api";
 import CurrencyCard from "../currency-card/currency-card";
 import { ExchangeAnimation } from "../exchange-animation/exchange-animation";
 import type { Currency } from "../../types";
 import { CalculatorProps } from "./types";
-import { API_KEY, initialData } from "../../utils/consts";
-import useSWR from "swr";
+import { initialData } from "../../utils/consts";
 
 export const Calculator = (props: CalculatorProps) => {
   const { data } = props;
@@ -19,6 +18,13 @@ export const Calculator = (props: CalculatorProps) => {
 
   const { data: baseCurrencyData, isLoading: isBaseCurrencyDataLoading } =
     useCurrency(baseCurrency.id);
+
+  useEffect(() => {
+    if (!isQuoteCurrencyDataLoading && !isBaseCurrencyDataLoading) {
+      setBaseCurrency(baseCurrencyData.data);
+      setQuoteCurrency(quoteCurrencyData.data);
+    }
+  }, []);
 
   const handleBaseCurrencyQuantity = (
     event: React.ChangeEvent<HTMLInputElement>
@@ -38,8 +44,8 @@ export const Calculator = (props: CalculatorProps) => {
           <CurrencyCard
             baseCurrencyQuantity={baseCurrencyQuantity}
             isBase={true}
-            baseCurrency={baseCurrencyData}
-            quoteCurrency={quoteCurrencyData}
+            baseCurrency={baseCurrency}
+            quoteCurrency={quoteCurrency}
             handleCurrencyChange={setBaseCurrency}
             currencies={data}
             setBaseCurrencyQuantity={handleBaseCurrencyQuantity}
@@ -51,8 +57,8 @@ export const Calculator = (props: CalculatorProps) => {
           <CurrencyCard
             baseCurrencyQuantity={baseCurrencyQuantity}
             isBase={false}
-            baseCurrency={baseCurrencyData}
-            quoteCurrency={quoteCurrencyData}
+            baseCurrency={baseCurrency}
+            quoteCurrency={quoteCurrency}
             handleCurrencyChange={setQuoteCurrency}
             currencies={data}
             setBaseCurrencyQuantity={handleBaseCurrencyQuantity}

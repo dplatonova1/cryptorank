@@ -26,23 +26,27 @@ const CurrencyCard = (props: CurrencyCardProps) => {
   }, [baseCurrency, isBase, quoteCurrency]);
 
   const exchangeRate = useMemo(() => {
-    return Math.round(
-      baseCurrency.values.USD.price / quoteCurrency.values.USD.price
+    return (
+      Math.round(
+        (baseCurrency.values.USD.price / quoteCurrency.values.USD.price) * 100
+      ) / 100
     );
   }, [baseCurrency.values.USD.price, quoteCurrency.values.USD.price]);
   const exchangeRateQuote = useMemo(() => {
-    return Math.round(
-      quoteCurrency.values.USD.price / baseCurrency.values.USD.price
+    return (
+      Math.round(
+        (quoteCurrency.values.USD.price / baseCurrency.values.USD.price) * 100
+      ) / 100
     );
   }, [baseCurrency.values.USD.price, quoteCurrency.values.USD.price]);
 
   const quoteCurrencyBasedOnQuantity = useMemo(() => {
-    return baseCurrencyQuantity * exchangeRate;
+    return Math.round(baseCurrencyQuantity * exchangeRate * 100) / 100;
   }, [baseCurrencyQuantity, exchangeRate]);
 
   return (
     <CurrencyCardContainer>
-      {isLoading ? (
+      {isLoading || (!baseCurrency && !quoteCurrency) ? (
         <ExchangePrice>'Loading...'</ExchangePrice>
       ) : (
         <>

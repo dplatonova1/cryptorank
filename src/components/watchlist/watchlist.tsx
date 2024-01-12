@@ -2,10 +2,23 @@ import { TableComponent } from "../table/table";
 import { WatchlistContainer } from "./styles";
 import { useCurrencies } from "../../services/api";
 import { usePagination } from "../../hooks/usePagination";
+import { useEffect, useState } from "react";
+import { initialDataWatchlist } from "../../utils/consts";
+import { WatchlistResponse } from "../../types";
 
 export const Watchlist = () => {
+  const [currencies, setCurrencies] =
+    useState<WatchlistResponse>(initialDataWatchlist);
   const { limit, onPaginationChange, skip, pagination } = usePagination();
-  const { data: currencies, isLoading } = useCurrencies(limit, skip);
+
+  const { data: currenciesData, isLoading } = useCurrencies(limit, skip);
+  useEffect(() => {
+    if (!isLoading) {
+      setCurrencies(currenciesData);
+      console.log(currencies, currenciesData);
+    }
+  }, []);
+
   const pageCount = Math.round(currencies.meta.count / limit);
   if (isLoading) return <p>Is loading</p>;
 

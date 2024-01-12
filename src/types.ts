@@ -17,7 +17,7 @@ export type Currency = {
   symbol: string;
   name: string;
   type: string;
-  category: string;
+  category?: string;
   rank: number;
   volume24hBase: number;
   values: {
@@ -49,5 +49,20 @@ export type Currency = {
     "16x16": string;
     "200x200": string;
     "60x60": string;
+  };
+};
+
+export type WatchlistResponse = {
+  data: Currency[];
+  meta: {
+    count: number;
+  };
+  status: {
+    code: number;
+    creditsCost: number;
+    message: string;
+    responseTime: number;
+    success: boolean;
+    time: string;
   };
 };
