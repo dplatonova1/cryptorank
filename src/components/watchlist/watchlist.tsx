@@ -15,7 +15,6 @@ export const Watchlist = () => {
   useEffect(() => {
     if (!isLoading) {
       setCurrencies(currenciesData);
-      console.log(currencies, currenciesData);
     }
   }, []);
 
